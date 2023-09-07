@@ -1,4 +1,4 @@
-from .models import Vertex, Edge
+from .entities import Vertex, Edge
 
 
 # graph data structure
