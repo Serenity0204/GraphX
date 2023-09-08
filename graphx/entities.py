@@ -12,7 +12,7 @@ class Vertex:
         self._value = copy.deepcopy(value)
         self._id = uuid.uuid4()
 
-    def get(self):
+    def value(self):
         return self._value
 
     def id(self):
@@ -31,7 +31,18 @@ class Vertex:
         self._to.append(v)
 
     def __str__(self) -> str:
-        return self._value
+        return str(self._value)
+
+    ## for comparing
+    def __eq__(self, other) -> bool:
+        if isinstance(other, Vertex):
+            return self._recursive_eq(self._value, other._value)
+        return False
+
+    def _recursive_eq(self, obj1, obj2) -> bool:
+        if hasattr(obj1, "__dict__") and hasattr(obj2, "__dict__"):
+            return obj1.__dict__ == obj2.__dict__
+        return obj1 == obj2
 
 
 # Edge class for graph
@@ -58,6 +69,7 @@ class Edge:
             self._backward_to = src
             self._backward_name_as = backward_name
 
+        # add from and to for the input src and dest
         # example
         """
         Person p1, p2

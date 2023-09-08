@@ -5,18 +5,18 @@ import sys
 
 sys.path.append("../")
 
-from graphx import Edge, Vertex, GraphX
+from graphx import Edge, Vertex
 
 
 class EntitiesTest(unittest.TestCase):
     def test_vertex1(self):
         v1 = Vertex(1)
 
-        self.assertEqual(v1.get(), 1)
+        self.assertEqual(v1.value(), 1)
 
         v2 = Vertex("ok")
 
-        self.assertEqual(v2.get(), "ok")
+        self.assertEqual(v2.value(), "ok")
 
     def test_edge1(self):
         v1 = Vertex(1)
@@ -29,3 +29,4 @@ class EntitiesTest(unittest.TestCase):
         e2 = Edge(v3, v4, "out", "in", True)
         self.assertEqual(e2.get_forward_info(), {"from": v3, "to": v4, "name": "out"})
         self.assertEqual(e2.get_backward_info(), {"from": v4, "to": v3, "name": "in"})
+    

@@ -24,6 +24,7 @@ class GraphX:
         self._nodes = []
         self._edges = []
         # for easier getting nodes
+        # UUID vs Node dict
         self._nodes_lookup_map = {}
 
         # will call the add function, which will construct the vertex and edges
@@ -41,3 +42,18 @@ class GraphX:
     # return a copy of the stored edges
     def edges(self) -> List:
         return GraphX._copy(self._edges)
+
+    def add_node(self, value):
+        vertex = Vertex(value)
+        if vertex in self._nodes_lookup_map.values():
+            raise ValueError(f"vertex with value={vertex.value()} already exists")
+        id = vertex.id()
+        self._nodes_lookup_map[id] = vertex
+        self._nodes.append(vertex)
+
+    def add_nodes(self, values: List):
+        for value in values:
+            self.add_node(value)
+
+    def add_edge(self, src_val, dest_val):
+        pass
