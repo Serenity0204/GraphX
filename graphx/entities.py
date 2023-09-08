@@ -15,6 +15,9 @@ class Vertex:
     def get(self):
         return self._value
 
+    def id(self):
+        return self._id
+
     def get_from(self) -> List:
         return self._from
 
