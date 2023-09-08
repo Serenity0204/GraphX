@@ -21,6 +21,15 @@ class Vertex:
     def get_to(self) -> List:
         return self._to
 
+    def add_from(self, v) -> None:
+        self._from.append(v)
+
+    def add_to(self, v) -> None:
+        self._to.append(v)
+
+    def __str__(self) -> str:
+        return self._value
+
 
 # Edge class for graph
 class Edge:

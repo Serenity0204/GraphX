@@ -8,7 +8,8 @@ pip:
     pip freeze > requirements.txt
     pip install -r requirements.txt
 
-	
+unittest:
+    python -m unittest <test file>.py
 
 
 
