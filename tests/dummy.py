@@ -1,7 +1,7 @@
 import sys
 
 sys.path.append("../")
-from graphx import Edge, Vertex, GraphX
+from graphx import Vertex, GraphX
 
 
 def generate_test_entities_num():
@@ -15,7 +15,13 @@ class Person:
         self.age = age
 
     def __str__(self) -> str:
-        return str(self.name)
+        return str("person:" + self.name)
+
+    ## for comparing
+    def __eq__(self, other) -> bool:
+        if isinstance(other, Person):
+            return (self.name == other.name) and (self.age == other.age)
+        return False
 
 
 def generate_test_entities_person():
