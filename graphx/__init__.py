@@ -1,2 +1,2 @@
-from .entities import Edge, Vertex
+from .vertex import Vertex
 from .graphx import GraphX

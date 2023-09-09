@@ -1,59 +1,84 @@
-from .entities import Vertex, Edge
-import copy
+from .vertex import Vertex
 from typing import Dict, List
+from .utils import copy_list
 
 
 # graph data structure
 class GraphX:
-    @classmethod
-    def _copy(cls, objects: List) -> List:
-        copies = []
-        for obj in objects:
-            copied = copy.deepcopy(obj)
-            copies.append(copied)
-        return copies
-
-    def __init__(self, nodes=None, edges=None) -> None:
+    def __init__(self) -> None:
         """
         user should know nothing about the vertex/edge class
-        instead they should pass in a dict of values for nodes
+        instead they should pass in a list of values for nodes
         and a dict of relationships for edges
         inside the GraphX class it will initiate the instances for nodes and edges
-        but the edge should contain at least 3 keys, "from", "to", and "forward", and optional "backward"
+        but the edge should contain at least 3 keys, "from", "to", and optional "forward" and "backward" for custom names
         """
         self._nodes = []
-        self._edges = []
-        # for easier getting nodes
-        # UUID vs Node dict
-        self._nodes_lookup_map = {}
 
-        # will call the add function, which will construct the vertex and edges
-        if nodes is not None:
-            # self._nodes = GraphX._copy(nodes)
-            pass
-        if edges is not None:
-            # self._edges = GraphX._copy(edges)
-            pass
+    # will load the stored json
+    def load(path: str) -> None:
+        pass
 
-    # return a copy of the stored nodes
+    # will dump the in memory graph into path
+    def dump(path: str) -> None:
+        pass
+
+    # return a copy of the stored nodes values
     def nodes(self) -> List:
-        return GraphX._copy(self._nodes)
+        vertices = copy_list(self._nodes)
+        vals = []
+        for vertex in vertices:
+            vals.append(vertex.value())
+        return vals
 
-    # return a copy of the stored edges
-    def edges(self) -> List:
-        return GraphX._copy(self._edges)
-
-    def add_node(self, value):
+    def add_node(self, value) -> None:
         vertex = Vertex(value)
-        if vertex in self._nodes_lookup_map.values():
+        # cannot add duplicate
+        if vertex in self._nodes:
             raise ValueError(f"vertex with value={vertex.value()} already exists")
-        id = vertex.id()
-        self._nodes_lookup_map[id] = vertex
         self._nodes.append(vertex)
 
-    def add_nodes(self, values: List):
+    def add_nodes(self, values: List) -> None:
         for value in values:
             self.add_node(value)
 
-    def add_edge(self, src_val, dest_val):
-        pass
+    def add_edge(self, relationship: Dict) -> None:
+        # contruct temp vertex, and check if vertex exists
+        from_val = relationship.get("from", None)
+        to_val = relationship.get("to", None)
+        # if DNE then raise error
+        if from_val is None or to_val is None:
+            raise KeyError(f"required 'from' and 'to' as keys, but did not find")
+
+        ## construct the dummy
+        dummy_from = Vertex(from_val)
+        dummy_to = Vertex(to_val)
+
+        # get the stored vertex indices by dummy
+        from_vertex_idx = self._nodes.index(dummy_from)
+        to_vertex_idx = self._nodes.index(dummy_to)
+
+        # get the actual vertices
+        from_vertex = self._nodes[from_vertex_idx]
+        to_vertex = self._nodes[to_vertex_idx]
+
+        # get the name
+        forward_name = relationship.get("forward", "forward")
+        backward_name = relationship.get("backward", None)
+
+        # update vertex
+        from_vertex.add_to(to_vertex, forward_name)
+        if backward_name is not None:
+            to_vertex.add_from(from_vertex, backward_name)
+
+    def add_edges(self, relationships: List[Dict]) -> None:
+        for relationship in relationships:
+            self.add_edge(relationship)
+
+    # for testing, should not be called
+    def _vertex(self, value) -> Vertex:
+        vertex = Vertex(value)
+        if vertex not in self._nodes:
+            return None
+        idx = self._nodes.index(vertex)
+        return self._nodes[idx]
