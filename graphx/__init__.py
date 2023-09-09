@@ -1,2 +1,3 @@
 from .vertex import Vertex
-from .graphx import GraphX
+
+from .graph import Graph

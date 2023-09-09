@@ -4,7 +4,7 @@ from .utils import copy_list
 
 
 # graph data structure
-class GraphX:
+class Graph:
     def __init__(self) -> None:
         """
         user should know nothing about the vertex/edge class
