@@ -4,6 +4,7 @@ from .test_graph import GraphTest
 from .test_pipe import PipeTest
 from .test_query import QueryTest
 from .test_vertex import VertexTest
+from .test_graphx import GraphXTest
 from .dummy import *
 
 

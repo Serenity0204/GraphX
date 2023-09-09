@@ -1,6 +1,5 @@
-# Project Name
-Project Intro
-
+# GraphX
+GraphX is a Python-based graph storage engine designed to facilitate the representation of complex relational queries, enabling users to store data while effectively capturing relationships between individual data points.
 
 ## Demo
 * demo 1

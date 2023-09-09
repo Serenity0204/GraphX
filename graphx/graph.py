@@ -16,18 +16,6 @@ class Graph:
         """
         self._nodes = []
 
-        # for dumping later
-        self._saved_vals = []
-        self._edges = []
-
-    # will load the stored json
-    def load(path: str) -> None:
-        pass
-
-    # will dump the in memory graph into path
-    def dump(path: str) -> None:
-        pass
-
     # return a copy of the stored nodes values
     def nodes(self) -> List:
         vertices = copy_list(self._nodes)
@@ -42,7 +30,6 @@ class Graph:
         if vertex in self._nodes:
             raise ValueError(f"vertex with value={vertex.values()} already exists")
 
-        self._saved_vals.append(value)
         self._nodes.append(vertex)
 
     def add_nodes(self, values: List) -> None:
@@ -56,8 +43,6 @@ class Graph:
         # if DNE then raise error
         if from_val is None or to_val is None:
             raise KeyError(f"required 'from' and 'to' as keys, but did not find")
-        # save the edges
-        self._edges.append(relationship)
 
         ## construct the dummy
         dummy_from = Vertex(from_val)
