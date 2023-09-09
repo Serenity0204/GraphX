@@ -1,20 +1,14 @@
 import unittest
-
 import sys
 
 sys.path.append("../")
-
 from graphx import Graph
-from tests.dummy import (
-    generate_test_entities_num,
-    generate_test_entities_person,
-    Person,
-)
+from tests.dummy import *
 
 
-class GraphXTest(unittest.TestCase):
+class GraphTest(unittest.TestCase):
     def test_nodes1(self):
-        vals = generate_test_entities_num()
+        vals = generate_test_num()
         g = Graph()
         g.add_nodes(vals)
         expected = g.nodes()
@@ -24,7 +18,7 @@ class GraphXTest(unittest.TestCase):
             g.add_node(val)
 
     def test_nodes2(self):
-        vals = generate_test_entities_person()
+        vals = generate_test_person(4)
         g = Graph()
         g.add_nodes(vals)
         expected = g.nodes()
@@ -35,19 +29,19 @@ class GraphXTest(unittest.TestCase):
             g.add_node(val)
 
     def test_edge1(self):
-        vals = generate_test_entities_num()
+        vals = generate_test_num()
         g = Graph()
         g.add_nodes(vals)
         relationship1 = {"from": vals[0], "to": vals[1], "forward": "out"}
         g.add_edge(relationship1)
 
-        v1 = g._vertex(vals[0])
-        v2 = g._vertex(vals[1])
+        v1 = g.vertex(vals[0])
+        v2 = g.vertex(vals[1])
         exist = v1.contains(v2, "to", "out")
         self.assertTrue(exist, True)
 
     def test_edge2(self):
-        vals = generate_test_entities_person()
+        vals = generate_test_person(4)
         g = Graph()
         g.add_nodes(vals)
 
@@ -60,9 +54,9 @@ class GraphXTest(unittest.TestCase):
         }
         edges = [relationship1, relationship2]
         g.add_edges(edges)
-        v0 = g._vertex(vals[0])
-        v1 = g._vertex(vals[1])
-        v2 = g._vertex(vals[2])
+        v0 = g.vertex(vals[0])
+        v1 = g.vertex(vals[1])
+        v2 = g.vertex(vals[2])
 
         exist0 = v0.contains(v1, "to", "out")
         self.assertTrue(exist0, True)

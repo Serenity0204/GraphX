@@ -1,6 +1,7 @@
 from .vertex import Vertex
 from typing import Dict, List
 from .utils import copy_list
+import copy
 
 
 # graph data structure
@@ -15,6 +16,10 @@ class Graph:
         """
         self._nodes = []
 
+        # for dumping later
+        self._saved_vals = []
+        self._edges = []
+
     # will load the stored json
     def load(path: str) -> None:
         pass
@@ -28,14 +33,16 @@ class Graph:
         vertices = copy_list(self._nodes)
         vals = []
         for vertex in vertices:
-            vals.append(vertex.value())
+            vals.append(copy.deepcopy(vertex.values()))
         return vals
 
     def add_node(self, value) -> None:
         vertex = Vertex(value)
         # cannot add duplicate
         if vertex in self._nodes:
-            raise ValueError(f"vertex with value={vertex.value()} already exists")
+            raise ValueError(f"vertex with value={vertex.values()} already exists")
+
+        self._saved_vals.append(value)
         self._nodes.append(vertex)
 
     def add_nodes(self, values: List) -> None:
@@ -49,6 +56,8 @@ class Graph:
         # if DNE then raise error
         if from_val is None or to_val is None:
             raise KeyError(f"required 'from' and 'to' as keys, but did not find")
+        # save the edges
+        self._edges.append(relationship)
 
         ## construct the dummy
         dummy_from = Vertex(from_val)
@@ -75,10 +84,9 @@ class Graph:
         for relationship in relationships:
             self.add_edge(relationship)
 
-    # for testing, should not be called
-    def _vertex(self, value) -> Vertex:
+    def vertex(self, value) -> Vertex:
         vertex = Vertex(value)
         if vertex not in self._nodes:
-            return None
+            raise ValueError(f"vertex with value={value} cannot be found")
         idx = self._nodes.index(vertex)
-        return self._nodes[idx]
+        return copy.copy(self._nodes[idx])

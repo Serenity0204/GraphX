@@ -15,7 +15,7 @@ class Vertex:
         # deep copy the value to prevent original data being modified
         self._value = copy.deepcopy(value)
 
-    def value(self):
+    def values(self):
         return self._value
 
     def get_from(self) -> List:
@@ -75,7 +75,7 @@ class Vertex:
         if isinstance(self._value, (int, float, str)):
             return hash(self._value)
         if hasattr(self._value, "__dict__"):
-            return hash(tuple(self._value.__dict__.items()))
+            return hash(tuple(sorted(self._value.__dict__.items())))
         else:
             # Handle other cases as needed
             raise TypeError("unsupported type for value")
