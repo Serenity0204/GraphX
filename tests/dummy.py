@@ -34,7 +34,7 @@ def generate_test_person(num):
 nodes = [1, 2, 3, 4, 5, 6]
 
 edges = [
-    {"from": 1, "to": 2, "forward": "son", "backward": "father"},
+    {"from": 1, "to": 2, "forward": "son"},
     {"from": 2, "to": 3, "forward": "son"},
     {"from": 2, "to": 4, "forward": "son"},
     {"from": 2, "to": 5, "forward": "son"},

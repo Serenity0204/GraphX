@@ -62,8 +62,11 @@ class Graph:
 
         # update vertex
         from_vertex.add_to(to_vertex, forward_name)
+        to_vertex.add_from(from_vertex, forward_name)
+
         if backward_name is not None:
-            to_vertex.add_from(from_vertex, backward_name)
+            to_vertex.add_to(from_vertex, backward_name)
+            from_vertex.add_from(to_vertex, backward_name)
 
     def add_edges(self, relationships: List[Dict]) -> None:
         for relationship in relationships:

@@ -17,7 +17,7 @@ nodes = [1, 2, 3, 4, 5, 6]
 
 edges = [
 
-    {"from": 1, "to": 2, "forward": "son", "backward": "father"},
+    {"from": 1, "to": 2, "forward": "son"},
 
     {"from": 2, "to": 3, "forward": "son"},
 
@@ -76,12 +76,15 @@ class GraphXTest(unittest.TestCase):
     def test_grandgrand_unique(self):
         # 3 4 5 6
 
-        # 4 6 5 6 3 6
-
+        # 3: 4 5 6
+        # 4: 3 5 6
+        # 5: 4 3 6
+        # 6: 3 4 5
+        ## should be 4 5 6 3 5 6 4 3 6 3 4 5 -> 4 5 6 3
         nodes = self.graphX.query().node(1).forward().forward().forward().unique().run()
 
         self.print(nodes, self.test_grandgrand_unique.__name__)
-        self.assertEqual(nodes, [4, 6, 5, 3])
+        self.assertEqual(nodes, [4, 5, 6, 3])
 
     def test_take(self):
         nodes = (
@@ -95,4 +98,4 @@ class GraphXTest(unittest.TestCase):
             .run()
         )
         self.print(nodes, self.test_take.__name__)
-        self.assertEqual(nodes, [4, 6, 5])
+        self.assertEqual(nodes, [4, 5, 6])

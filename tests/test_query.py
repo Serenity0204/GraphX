@@ -88,12 +88,12 @@ class QueryTest(unittest.TestCase):
         nodes = self.q.node(1).forward().forward().forward().unique().run()
 
         self.print(nodes, self.test_grandgrand_unique.__name__)
-        self.assertEqual(nodes, [4, 6, 5, 3])
+        self.assertEqual(nodes, [4, 5, 6, 3])
 
     def test_take(self):
         nodes = self.q.node(1).forward().forward().forward().unique().take(3).run()
         self.print(nodes, self.test_take.__name__)
-        self.assertEqual(nodes, [4, 6, 5])
+        self.assertEqual(nodes, [4, 5, 6])
 
     # def test_toms_sisters(self):
 

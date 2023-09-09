@@ -7,11 +7,10 @@ from .utils import copy_list
 class Vertex:
     def __init__(self, value) -> None:
         # verticies
-        self._from = []
-        self._to = []
+        # key is vertex, value is name
+        self._from = {}
+        self._to = {}
 
-        # for better loop up relationship, key is vertex, value is name
-        self._names = {}
         # deep copy the value to prevent original data being modified
         self._value = copy.deepcopy(value)
 
@@ -19,18 +18,16 @@ class Vertex:
         return self._value
 
     def get_from(self) -> List:
-        return copy_list(self._from)
+        return copy_list(list(self._from.keys()))
 
     def get_to(self) -> List:
-        return copy_list(self._to)
+        return copy_list(list(self._to.keys()))
 
     def add_from(self, v, name) -> None:
-        self._from.append(v)
-        self._names[v] = name
+        self._from[v] = name
 
     def add_to(self, v, name) -> None:
-        self._to.append(v)
-        self._names[v] = name
+        self._to[v] = name
 
     def __str__(self) -> str:
         return str(self._value)
@@ -49,20 +46,24 @@ class Vertex:
     def contains(self, vertex, direction: str, name: str) -> bool:
         if direction != "to" and direction != "from":
             return False
+
+        relationship_name = None
         # search in _to
-        if direction == "to" and vertex not in self._to:
+        if direction == "to":
             # not in to direction
-            return False
+            relationship_name = self._to.get(vertex, None)
+            if relationship_name is None:
+                return False
+
         # search in _from
-        if direction == "from" and vertex not in self._from:
-            return False
+        if direction == "from":
+            relationship_name = self._from.get(vertex, None)
+            # not in from direction
+            if relationship_name is None:
+                return False
 
         # if it's in correct direction, check the name
-        relationship_name = self._names.get(vertex, None)
-        if relationship_name is None:
-            return False
-
-        # if it's correct direction, and the name is successfully retrieved
+        # if the name is successfully retrieved
         # check if name equals
         if relationship_name != name:
             return False
