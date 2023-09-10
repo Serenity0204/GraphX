@@ -1,15 +1,15 @@
 # GraphX
-GraphX is a Python-based in memory graph storage engine designed to facilitate the representation of complex relational queries, enabling users to store data while effectively capturing relationships between individual data points.
+GraphX is a Python-based in-memory graph storage engine designed to facilitate the representation of complex relational queries, enabling users to store data while effectively capturing relationships between individual data points.
 
 ## Usage
 - Create GraphX
 ```
-## nodes has to be a list of the values you wants to store, and edges has to be a dictionary that describes the relationships
-graphX = GraphX(<nodes if not then None>, <edges if not then None>)
+## nodes have to be a list of the values you want to store, and edges have to be a dictionary that describes the relationships
+graph = GraphX(<nodes if not then None>, <edges if not then None>)
 ```
 - Edges And Nodes Example Input
 ```
-## Nodes' values can be any primative types, even class instances will work too
+## Nodes' values can be any primitive type, even class instances will work too
 nodes = [1, 2, 3, 4, 5, 6]
 
 ## Edges' have to include two keys(required) "from" and "to" to indicate the relationship
@@ -69,7 +69,8 @@ g.query().node(<your value>).forward(name_is="your name1").backward(name_startsw
 - 🔧 Flexible Data Manipulation -- Seamlessly add single or multiple edges to the graph.
 - 🔍 Advanced Querying -- Query the graph based on various criteria.
 - 🔗 Chaining Queries -- Implemented Lazy Queries to boost up the performance                                                
-
+## Ideas
+The original idea came from https://aosabook.org/en/
 
 ## System Setup
 To run this project run the command 'pip install -r requirements.txt'
