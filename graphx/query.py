@@ -1,9 +1,7 @@
 from .pipe import Pipe
-
 from .graph import Graph
-
 from .vertex import Vertex
-
+from .utils import *
 from typing import List
 import copy
 
@@ -38,9 +36,9 @@ class Query:
         pipeline = Pipe(name)
         pipefunc = pipeline.function()
 
-        args = [] if name != "take" else [args[0]]
+        arguments = [] if len(args) == 0 else list(args)
         self._pipelines.append(pipefunc)
-        self._args.append(args)
+        self._args.append(arguments)
 
     def run(self):
         if len(self._initial) == 0:
@@ -66,12 +64,21 @@ class Query:
 
     # does not make sense to call if didn't call node first
 
-    def forward(self):
-        self._query("forward")
+    def forward(self, **kwargs):
+        if len(kwargs) > 1:
+            raise ValueError("invalid number of kwargs")
+
+        query = decide_query(kwargs)
+        name = kwargs.get(query, None)
+        self._query("forward", query, name)
         return self
 
-    def backward(self):
-        self._query("backward")
+    def backward(self, **kwargs):
+        if len(kwargs) > 1:
+            raise ValueError("invalid number of kwargs")
+        query = decide_query(kwargs)
+        name = kwargs.get(query, None)
+        self._query("backward", query, name)
         return self
 
     def unique(self):

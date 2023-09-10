@@ -99,3 +99,59 @@ class GraphXTest(unittest.TestCase):
         )
         self.print(nodes, self.test_take.__name__)
         self.assertEqual(nodes, [4, 5, 6])
+
+    def test_granddaughters(self):
+        nodes = self.graphX.query().node(1).forward().forward(name_is="daughter").run()
+        self.print(nodes, self.test_granddaughters.__name__)
+        self.assertEqual(nodes, [6])
+
+    def test_sisters(self):
+        nodes = self.graphX.query().node(3).forward(name_is="sister").run()
+        self.print(nodes, self.test_sisters.__name__)
+        self.assertEqual(nodes, [6])
+
+    def test_brothers_grandfater(self):
+        # 4 5 6
+        # 4b s: 2
+        # 5b s: 2
+        nodes = (
+            self.graphX.query()
+            .node(3)
+            .forward()
+            .backward(name_is="son")
+            .backward(name_is="son")
+            .unique()
+            .run()
+        )
+        self.print(nodes, self.test_brothers_grandfater.__name__)
+        self.assertEqual(nodes, [1])
+
+    def test_sisters_brother(self):
+        nodes = (
+            self.graphX.query()
+            .node(3)
+            .forward(name_is="sister")
+            .forward(name_is="brother")
+            .run()
+        )
+        self.print(nodes, self.test_sisters_brother.__name__)
+        self.assertEqual(nodes, [3, 4, 5])
+
+    def test_brothers_father_daughter_prefix(self):
+        # brother father daughter
+        # 4 5 6
+        # 4b s: 2
+        # 5b s: 2
+        # output: 6
+
+        nodes = (
+            self.graphX.query()
+            .node(3)
+            .forward()
+            .backward(name_is="son")
+            .forward(name_startswith="daughter")
+            .unique()
+            .run()
+        )
+        self.print(nodes, self.test_brothers_father_daughter_prefix.__name__)
+        self.assertEqual(nodes, [6])

@@ -17,11 +17,29 @@ class Vertex:
     def values(self):
         return self._value
 
-    def get_from(self) -> List:
-        return copy_list(list(self._from.keys()))
+    def _filter(self, query, name, mode) -> List:
+        result = []
+        items = self._from.items() if mode == "from" else self._to.items()
+        for key, val in items:
+            if query == "name_startswith" and val.startswith(name):
+                result.append(key)
+            if query == "name_endswith" and val.endswith(name):
+                result.append(key)
+            if query == "name_contains" and val.find(name) != -1:
+                result.append(key)
+            if query == "name_is" and val == name:
+                result.append(key)
+        return copy_list(result)
 
-    def get_to(self) -> List:
-        return copy_list(list(self._to.keys()))
+    def get_from(self, query=None, name=None) -> List:
+        if query is None:
+            return copy_list(list(self._from.keys()))
+        return self._filter(query, name, "from")
+
+    def get_to(self, query=None, name=None) -> List:
+        if query is None:
+            return copy_list(list(self._to.keys()))
+        return self._filter(query, name, "to")
 
     def add_from(self, v, name) -> None:
         self._from[v] = name
