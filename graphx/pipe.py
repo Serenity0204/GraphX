@@ -58,49 +58,11 @@ class Pipe:
             count += 1
         return result
 
-    # def filter(self, args: List[Vertex], query_type, attribute) -> List[Vertex]:
+    def filter(self, args: List[Vertex], value) -> List[Vertex]:
+        pass
 
-    #     # filter only supports _startswith, _contains, _endswith, and _is
+    def exclude(self, args: List[Vertex], value) -> List[Vertex]:
+        pass
 
-    #     result = []
-    #     for arg in args:
-
-    #         if not arg.values()
-    #     pass
-
-    # check = (
-
-    #     query_type != "name_startswith"
-
-    #     and query_type != "name_contains"
-
-    #     and query_type != "name_endswith"
-
-    #     and query_type != "name_is"
-
-    # )
-
-    # if not check:
-
-    #     raise ValueError(
-
-    #         "filter only supports name_startswith, name_contains, name_endswith, and name_is"
-
-    #     )
-
-    # result = []
-    # for arg in args:
-
-    #     if query_type == "name_startswith":
-    #         pass
-
-    #     if query_type == "name_contains":
-    #         pass
-
-    #     if query_type == "name_endswith":
-    #         pass
-
-    #     if query_type == "name_is":
-    #         pass
-
-    # return result
+    def sort(self, args: List[Vertex], value, ascending=True) -> List[Vertex]:
+        pass
