@@ -60,6 +60,8 @@ class Query:
         results = []
         for vertex in outputs:
             results.append(copy.copy(vertex.values()))
+
+        self.clean()
         return results
 
     # does not make sense to call if didn't call node first

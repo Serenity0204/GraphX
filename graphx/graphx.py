@@ -9,23 +9,12 @@ import copy
 
 class GraphX:
     def __init__(self, nodes: List = None, edges: Dict = None) -> None:
-        # for dumping later
-        self._saved_vals = [] if len(nodes) == 0 else copy.copy(nodes)
-        self._edges = [] if len(edges) == 0 else copy.copy(nodes)
         self._graph = Graph()
         self._query = Query(self._graph)
         if len(nodes) != 0:
             self.add_nodes(nodes)
         if len(edges) != 0:
             self.add_edges(edges)
-
-    # will load the stored json
-    def load(path: str) -> None:
-        pass
-
-    # will dump the in memory graph into path
-    def dump(path: str) -> None:
-        pass
 
     def add_node(self, value) -> None:
         self._graph.add_node(value)
