@@ -90,3 +90,15 @@ class Query:
     def take(self, num: int):
         self._query("take", num)
         return self
+
+    def filter(self, *args):
+        self._query("filter", args)
+        return self
+
+    def exclude(self, *args):
+        self._query("exclude", args)
+        return self
+
+    def sort(self, ascending=True):
+        self._query("sort", ascending)
+        return self

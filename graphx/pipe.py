@@ -15,6 +15,9 @@ class Pipe:
         self._op_map["backward"] = self.backward
         self._op_map["unique"] = self.unique
         self._op_map["take"] = self.take
+        self._op_map["filter"] = self.filter
+        self._op_map["exclude"] = self.exclude
+        self._op_map["sort"] = self.sort
 
         f = self._op_map.get(self._operation, None)
 
@@ -55,23 +58,24 @@ class Pipe:
             count += 1
         return result
 
-    def _filter(self, args: List[Vertex], value, mode) -> List[Vertex]:
+    def _filter(self, args: List[Vertex], values, mode) -> List[Vertex]:
         result = []
         for arg in args:
-            if type(arg.values()) != type(value):
-                raise TypeError("type is not comparable")
-            if value == arg.values() and mode == "filter":
+            if arg.values() in values and mode == "filter":
                 result.append(arg)
-            if value != arg.values() and mode == "exclude":
+            ## Not correct
+            if arg.values() not in values and mode == "exclude":
                 result.append(arg)
         return result
 
-    def filter(self, args: List[Vertex], value) -> List[Vertex]:
-        return self._filter(args, value, "filter")
+    def filter(self, args: List[Vertex], values) -> List[Vertex]:
+        return self._filter(args, values, "filter")
 
-    def exclude(self, args: List[Vertex], value) -> List[Vertex]:
-        return self._filter(args, value, "exclude")
+    def exclude(self, args: List[Vertex], values) -> List[Vertex]:
+        return self._filter(args, values, "exclude")
 
     ## value has to be sortable
     def sort(self, args: List[Vertex], ascending=True) -> List[Vertex]:
-        pass
+        result = args.copy()
+        result.sort(key=lambda x: x.values(), reverse=not ascending)
+        return result
