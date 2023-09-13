@@ -238,3 +238,25 @@ class GraphXTest(unittest.TestCase):
 
         self.print(nodes, self.test_grandgrand_unique_exclude.__name__)
         self.assertEqual(nodes, [3])
+
+    def test_forward_filter_sort(self):
+        # 3 4 5 6 no 5 6
+
+        # 3: 4 5 6
+        # 4: 3 5 6
+        # X 5: 4 3 6
+        # X 6: 3 4 5
+        ## should be 4 5 6 3 5 6  -> 3, 4, 5, 5, 6, 6
+        nodes = (
+            self.graphX.query()
+            .node(1)
+            .forward()
+            .forward()
+            .filter(3, 4)
+            .forward()
+            .sort()
+            .run()
+        )
+
+        self.print(nodes, self.test_forward_filter_sort.__name__)
+        self.assertEqual(nodes, [3, 4, 5, 5, 6, 6])
