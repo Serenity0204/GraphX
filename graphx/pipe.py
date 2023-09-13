@@ -15,6 +15,9 @@ class Pipe:
         self._op_map["backward"] = self.backward
         self._op_map["unique"] = self.unique
         self._op_map["take"] = self.take
+        self._op_map["filter"] = self.filter
+        self._op_map["exclude"] = self.exclude
+        self._op_map["sort"] = self.sort
 
         f = self._op_map.get(self._operation, None)
 
@@ -41,7 +44,6 @@ class Pipe:
         for arg in args:
             if arg not in seen:
                 seen.add(arg)
-
                 result.append(arg)
         return result
 
@@ -52,55 +54,28 @@ class Pipe:
         for arg in args:
             if count == num:
                 break
-
             result.append(arg)
-
             count += 1
         return result
 
-    # def filter(self, args: List[Vertex], query_type, attribute) -> List[Vertex]:
+    def _filter(self, args: List[Vertex], values, mode) -> List[Vertex]:
+        result = []
+        for arg in args:
+            if arg.values() in values and mode == "filter":
+                result.append(arg)
+            ## Not correct
+            if arg.values() not in values and mode == "exclude":
+                result.append(arg)
+        return result
 
-    #     # filter only supports _startswith, _contains, _endswith, and _is
+    def filter(self, args: List[Vertex], values) -> List[Vertex]:
+        return self._filter(args, values, "filter")
 
-    #     result = []
-    #     for arg in args:
+    def exclude(self, args: List[Vertex], values) -> List[Vertex]:
+        return self._filter(args, values, "exclude")
 
-    #         if not arg.values()
-    #     pass
-
-    # check = (
-
-    #     query_type != "name_startswith"
-
-    #     and query_type != "name_contains"
-
-    #     and query_type != "name_endswith"
-
-    #     and query_type != "name_is"
-
-    # )
-
-    # if not check:
-
-    #     raise ValueError(
-
-    #         "filter only supports name_startswith, name_contains, name_endswith, and name_is"
-
-    #     )
-
-    # result = []
-    # for arg in args:
-
-    #     if query_type == "name_startswith":
-    #         pass
-
-    #     if query_type == "name_contains":
-    #         pass
-
-    #     if query_type == "name_endswith":
-    #         pass
-
-    #     if query_type == "name_is":
-    #         pass
-
-    # return result
+    ## value has to be sortable
+    def sort(self, args: List[Vertex], ascending=True) -> List[Vertex]:
+        result = args.copy()
+        result.sort(key=lambda x: x.values(), reverse=not ascending)
+        return result

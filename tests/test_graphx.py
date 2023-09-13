@@ -155,3 +155,86 @@ class GraphXTest(unittest.TestCase):
         )
         self.print(nodes, self.test_brothers_father_daughter_prefix.__name__)
         self.assertEqual(nodes, [6])
+
+    def test_grandgrand_unique_sort(self):
+        # 3 4 5 6
+
+        # 3: 4 5 6
+        # 4: 3 5 6
+        # 5: 4 3 6
+        # 6: 3 4 5
+        ## should be 4 5 6 3 5 6 4 3 6 3 4 5 -> 4 5 6 3 -> 3, 4, 5, 6,
+        nodes = (
+            self.graphX.query()
+            .node(1)
+            .forward()
+            .forward()
+            .forward()
+            .unique()
+            .sort()
+            .run()
+        )
+
+        self.print(nodes, self.test_grandgrand_unique_sort.__name__)
+        self.assertEqual(nodes, [3, 4, 5, 6])
+
+    def test_grandgrand_unique_filter(self):
+        # 3 4 5 6
+
+        # 3: 4 5 6
+        # 4: 3 5 6
+        # 5: 4 3 6
+        # 6: 3 4 5
+        ## should be 4 5 6 3 5 6 4 3 6 3 4 5 -> 4 5 6 3 -> 3, 4, 5, 6,
+        nodes = (
+            self.graphX.query()
+            .node(1)
+            .forward()
+            .forward()
+            .forward()
+            .unique()
+            .filter(3)
+            .run()
+        )
+
+        self.print(nodes, self.test_grandgrand_unique_filter.__name__)
+        self.assertEqual(nodes, [3])
+
+    def test_grandgrand_unique_exclude(self):
+        # 3 4 5 6
+
+        # 3: 4 5 6
+        # 4: 3 5 6
+        # 5: 4 3 6
+        # 6: 3 4 5
+        ## should be 4 5 6 3 5 6 4 3 6 3 4 5 -> 4 5 6 3 -> 3, 4, 5, 6,
+        nodes = (
+            self.graphX.query()
+            .node(1)
+            .forward()
+            .forward()
+            .forward()
+            .unique()
+            .exclude(5)
+            .sort()
+            .run()
+        )
+
+        self.print(nodes, self.test_grandgrand_unique_exclude.__name__)
+        self.assertEqual(nodes, [3, 4, 6])
+
+    def test_grandgrand_exclude_unique(self):
+        nodes = (
+            self.graphX.query()
+            .node(1)
+            .forward()
+            .forward()
+            .forward()
+            .exclude(5, 4, 6)
+            .unique()
+            .sort()
+            .run()
+        )
+
+        self.print(nodes, self.test_grandgrand_unique_exclude.__name__)
+        self.assertEqual(nodes, [3])

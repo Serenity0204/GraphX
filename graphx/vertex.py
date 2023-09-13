@@ -50,6 +50,12 @@ class Vertex:
     def __str__(self) -> str:
         return str(self._value)
 
+    def __lt__(self, other):
+        return self.values() < other.values()
+
+    def __eq__(self, other):
+        return self.values() == other.values()
+
     ## for comparing
     def __eq__(self, other) -> bool:
         if isinstance(other, Vertex):
