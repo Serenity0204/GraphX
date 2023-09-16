@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 from .vertex import Vertex
 import copy
 
@@ -8,8 +8,10 @@ class Pipe:
         self._operation = operation
         self._op_map = {}
 
-    # decide which function to return based on operation
+    def name(self) -> str:
+        return self._operation
 
+    # decide which function to return based on operation
     def function(self):
         self._op_map["forward"] = self.forward
         self._op_map["backward"] = self.backward

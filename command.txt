@@ -9,7 +9,7 @@ pip:
     pip install -r requirements.txt
 
 unittest:
-    python -m unittest <test file>.py
+    python -m unittest tests
 
 
 
