@@ -51,6 +51,14 @@ class Query:
         if len(self._initial) == 0:
             raise RuntimeError("cannot query if didn't call node(val) first")
 
+        # if no pipelines
+        if len(self._pipelines) == 0:
+            results = []
+            for vertex in self._initial:
+                results.append(copy.copy(vertex.values()))
+            self.clean()
+            return results
+
         # store history pipe outputs for tag/merge
         history = {}
 
@@ -150,3 +158,8 @@ class Query:
         # store the names in the dict
         self._merges[idx] = list(args)
         return self
+
+    @classmethod
+    def add_alias(self, name: str, function) -> None:
+        Pipe.add_alias(name, function)
+        setattr(self, name, function)

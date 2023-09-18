@@ -4,25 +4,28 @@ import copy
 
 
 class Pipe:
+    op_map = {}
+
     def __init__(self, operation: str) -> None:
         self._operation = operation
-        self._op_map = {}
+        self.setup()
+
+    def setup(self) -> None:
+        Pipe.op_map["forward"] = self.forward
+        Pipe.op_map["backward"] = self.backward
+        Pipe.op_map["unique"] = self.unique
+        Pipe.op_map["take"] = self.take
+        Pipe.op_map["filter"] = self.filter
+        Pipe.op_map["exclude"] = self.exclude
+        Pipe.op_map["sort"] = self.sort
+        Pipe.op_map["merge"] = self.merge
 
     def name(self) -> str:
         return self._operation
 
     # decide which function to return based on operation
     def function(self):
-        self._op_map["forward"] = self.forward
-        self._op_map["backward"] = self.backward
-        self._op_map["unique"] = self.unique
-        self._op_map["take"] = self.take
-        self._op_map["filter"] = self.filter
-        self._op_map["exclude"] = self.exclude
-        self._op_map["sort"] = self.sort
-        self._op_map["merge"] = self.merge
-
-        f = self._op_map.get(self._operation, None)
+        f = Pipe.op_map.get(self._operation, None)
 
         if f is None:
             raise KeyError("program does not support the alias:" + self._operation)
@@ -90,3 +93,13 @@ class Pipe:
             if name in history:
                 result += history[name]
         return result
+
+    # the function should return self
+    @classmethod
+    def add_alias(self, name: str, function) -> None:
+        if name in Pipe.op_map:
+            raise ValueError("alias with name=" + name + " already exists")
+        if not callable(function):
+            raise TypeError("cannot add non function type as alias")
+        Pipe.op_map[name] = function
+        setattr(self, name, function)
