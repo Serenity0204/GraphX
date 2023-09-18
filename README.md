@@ -49,19 +49,21 @@ edges = [
 - Queries, The Coolest Feature!
 ```
 ## After users inserted nodes and edges, user can query based on different inputs, supported queries include
-1. def node(self, value) -> Query
-2. def forward(self, **kwargs) -> Query
-3. def backward(self, **kwargs) -> Query
-4. def unique(self) -> Query
-5. def take(self, num: int) -> Query
-6. def filter(self, *args):
-7. def exclude(self, *args):
-8. def sort(self, ascending=True):
-9. def run(self) -> List[<Your Selected Stored Values>] ## core method
+1.  def node(self, value) -> Query
+2.  def forward(self, **kwargs) -> Query
+3.  def backward(self, **kwargs) -> Query
+4.  def unique(self) -> Query
+5.  def take(self, num: int) -> Query
+6.  def filter(self, *args) -> Query
+7.  def exclude(self, *args) -> Query
+8.  def sort(self, ascending=True) -> Query
+9.  def tag(self, name: str) -> Query # name has to be unique
+10. def merge(self, *args) -> Query
+11. def run(self) -> List[<Your Selected Stored Values>] ## core method
 
 ## The users are able to chain query like
 g = GraphX()
-g.query().node(<your value>).forward(name_is="your name1").backward(name_startswith="your name2").forward().exclude(<value 1>, <value 2>).take(6).unique().run()
+g.query().node(<your value>).forward(name_is="your name1").tag(<tag name 1>).backward(name_startswith="your name2").forward().exclude(<value 1>, <value 2>).take(6).tag(<tag name 2>).merge(<tag name 1>, <tag name 2>, ...).unique().run()
 
 ## the forward and backward query supports name_startswith, name_endswith, name_contains, and name_is as optional kwargs
 ## in every query the node() has to be called first, and in each query it has to end with run()

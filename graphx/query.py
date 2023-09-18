@@ -55,6 +55,11 @@ class Query:
         history = {}
 
         inputs, outputs = self._initial, None
+        # store the tag for node() if needed
+        if -1 in self._tags:
+            name = self._tags[-1]
+            history_output = inputs
+            history[name] = history_output
 
         for i in range(0, len(self._pipelines)):
             pipefunc = self._pipelines[i]
@@ -66,22 +71,23 @@ class Query:
             else:
                 outputs = pipefunc(inputs, *args)
 
-            is_merged = False
             if i in self._tags:
                 # copy output and put it into history, but only the tagged one
                 ## get the tagged name
                 name = self._tags[i]
                 history_output = copy.copy(outputs)
                 history[name] = history_output
-            merged = []
+            # update inputs
+            inputs = outputs
+
+            # merged if needed
             if i in self._merges:
                 pipeline = Pipe("merge")
                 pipefunc = pipeline.function()
-                merged += pipefunc(inputs, self._merges[i], history)
-            # update inputs
-            inputs = outputs
-            inputs += merged
-
+                # update outputs for merge
+                outputs = pipefunc(inputs, self._merges[i], history)
+                # update inputs agains
+                inputs = outputs
         results = []
         for vertex in outputs:
             results.append(copy.copy(vertex.values()))
@@ -137,8 +143,10 @@ class Query:
         return self
 
     def merge(self, *args):
-        print("inside")
+        # does not make sense to call merge when nothing else to merge
         idx = len(self._pipelines) - 1
+        if idx == -1:
+            raise ValueError("does not have other things to merge with")
         # store the names in the dict
         self._merges[idx] = list(args)
         return self
