@@ -260,3 +260,67 @@ class GraphXTest(unittest.TestCase):
 
         self.print(nodes, self.test_forward_filter_sort.__name__)
         self.assertEqual(nodes, [3, 4, 5, 5, 6, 6])
+
+    def test_merge_forward_forward(self):
+        nodes = (
+            self.graphX.query()
+            .node(1)
+            .tag("self")
+            .forward()
+            .tag("son")
+            .forward()
+            .merge("son", "self")
+            .sort()
+            .run()
+        )
+        # 1
+        # 2
+        # 3, 4, 5, 6
+        self.print(nodes, self.test_merge_forward_forward.__name__)
+
+        self.assertEqual(nodes, [1, 2, 3, 4, 5, 6])
+
+    def test_merge_forward_forward_no_son(self):
+        nodes = (
+            self.graphX.query()
+            .node(1)
+            .tag("self")
+            .forward()
+            .tag("son")
+            .forward()
+            .merge("self")
+            .sort()
+            .run()
+        )
+        # 1
+        # 3, 4, 5, 6
+        self.print(nodes, self.test_merge_forward_forward_no_son.__name__)
+
+        self.assertEqual(nodes, [1, 3, 4, 5, 6])
+
+    def test_forward_filter_merge(self):
+        # 1
+        # 2
+        # 3 4 5 6 no 5 6
+
+        # 3: 4 5 6
+        # 4: 3 5 6
+        # X 5: 4 3 6
+        # X 6: 3 4 5
+        ## should be 4 5 6 3 5 6  -> 3, 4, 5, 5, 6, 6
+        nodes = (
+            self.graphX.query()
+            .node(1)
+            .tag("self")  # remember 1
+            .forward()
+            .tag("son")  # remember 2
+            .forward()
+            .tag("gs")  # remember 3, 4, 5, 6
+            .filter(3, 4)  # remember 3, 4
+            .tag("gs34")  ## here will be 3, 4 for outputs
+            .merge("gs", "gs34", "son")  # merge 3, 4 with 3, 4, 5, 6, and 3, 4, and 2
+            .run()
+        )
+
+        self.print(nodes, self.test_forward_filter_merge.__name__)
+        self.assertEqual(nodes, [3, 4, 3, 4, 5, 6, 3, 4, 2])
