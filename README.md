@@ -65,6 +65,20 @@ edges = [
 g = GraphX()
 g.query().node(<your value>).forward(name_is="your name1").tag(<tag name 1>).backward(name_startswith="your name2").forward().exclude(<value 1>, <value 2>).take(6).tag(<tag name 2>).merge(<tag name 1>, <tag name 2>, ...).unique().run()
 
+## Addding custom alias to your query!
+## Define your functions that return self(query type)
+def grandson(_self):
+    return _self.forward().forward()
+
+def nullcall(_self):
+    return _self
+
+## add alias
+Query.add_alias("grandson", grandson)
+Query.add_alias("nullcall", nullcall)
+## good to go
+nodes = g.query().node(1).grandson().nullcall().run()
+
 ## the forward and backward query supports name_startswith, name_endswith, name_contains, and name_is as optional kwargs
 ## in every query the node() has to be called first, and in each query it has to end with run()
 ```

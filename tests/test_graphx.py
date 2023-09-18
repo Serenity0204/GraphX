@@ -2,7 +2,7 @@ import unittest
 import sys
 
 sys.path.append("../")
-from graphx import GraphX
+from graphx import GraphX, Query
 from tests.dummy import *
 
 
@@ -324,3 +324,38 @@ class GraphXTest(unittest.TestCase):
 
         self.print(nodes, self.test_forward_filter_merge.__name__)
         self.assertEqual(nodes, [3, 4, 3, 4, 5, 6, 3, 4, 2])
+
+    def test_custom_name(self):
+        def grandson(_self):
+            return _self.forward().forward()
+
+        def nullcall(_self):
+            return _self
+
+        Query.add_alias("grandson", grandson)
+        Query.add_alias("nullcall", nullcall)
+
+        nodes = self.graphX.query().node(1).grandson().nullcall().run()
+
+        self.print(nodes, self.test_custom_name.__name__)
+
+        self.assertEqual(nodes, [3, 4, 5, 6])
+
+    def test_tag_custom_filter_merge(self):
+        def grandson(_self):
+            return _self.forward().forward()
+
+        Query.add_alias("grandson_here", grandson)
+        nodes = (
+            self.graphX.query()
+            .node(1)
+            .tag("self")  # remember 1
+            .grandson_here()
+            .tag("grandson")  # remember 3, 4, 5, 6
+            .filter(3, 4)  ## here will be 3, 4 for outputs
+            .merge("self", "grandson")  # merge 3, 4 with 1 and 3, 4, 5, 6
+            .run()  # 3, 4, 1, 3, 4, 5, 6
+        )
+
+        self.print(nodes, self.test_tag_custom_filter_merge.__name__)
+        self.assertEqual(nodes, [3, 4, 1, 3, 4, 5, 6])
