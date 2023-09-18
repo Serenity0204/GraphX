@@ -20,6 +20,7 @@ class Pipe:
         self._op_map["filter"] = self.filter
         self._op_map["exclude"] = self.exclude
         self._op_map["sort"] = self.sort
+        self._op_map["merge"] = self.merge
 
         f = self._op_map.get(self._operation, None)
 
@@ -80,4 +81,12 @@ class Pipe:
     def sort(self, args: List[Vertex], ascending=True) -> List[Vertex]:
         result = args.copy()
         result.sort(key=lambda x: x.values(), reverse=not ascending)
+        return result
+
+    ## merge into pre-existing args helper
+    def merge(self, args: List[Vertex], names: List, history: Dict):
+        result = args.copy()
+        for name in names:
+            if name in history:
+                result += history[name]
         return result

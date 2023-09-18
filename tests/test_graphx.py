@@ -260,3 +260,20 @@ class GraphXTest(unittest.TestCase):
 
         self.print(nodes, self.test_forward_filter_sort.__name__)
         self.assertEqual(nodes, [3, 4, 5, 5, 6, 6])
+
+    def test_merge_forward_forward(self):
+        nodes = (
+            self.graphX.query()
+            .node(1)
+            .tag("self")
+            .forward()
+            .tag("son")
+            .forward()
+            .merge("son", "self")
+            .sort()
+            .run()
+        )
+
+        self.print(nodes, self.test_merge_forward_forward.__name__)
+
+        self.assertEqual(nodes, [1, 2, 3, 4, 5, 6])

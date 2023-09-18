@@ -20,7 +20,7 @@ class Query:
         # map of index of last pipe vs name , index = -1 for initial
         self._tags = {}
 
-        # map of index of last pipe vs merge call names
+        # map of index of last pipe vs merge call names (list of names)
         self._merges = {}
 
     # this does not make sense to be called in the middle way
@@ -73,11 +73,15 @@ class Query:
                 name = self._tags[i]
                 history_output = copy.copy(outputs)
                 history[name] = history_output
-            # if i in self._merges:
-            #     self._merge(inputs, self._merges[i], history)
-
+            merged = []
+            if i in self._merges:
+                pipeline = Pipe("merge")
+                pipefunc = pipeline.function()
+                merged += pipefunc(inputs, self._merges[i], history)
             # update inputs
             inputs = outputs
+            inputs += merged
+
         results = []
         for vertex in outputs:
             results.append(copy.copy(vertex.values()))
@@ -128,22 +132,13 @@ class Query:
     def tag(self, name: str):
         if name in self._tags.values():
             raise ValueError("name of tag cannot be duplicate")
-        # if no pipes, then tag the initial
-        if len(self._pipelines) == 0:
-            self._tags[-1] = name
-            return self
-
-        # else tag the last pipe index
+        # tag the last pipe index
         self._tags[len(self._pipelines) - 1] = name
         return self
 
-    ## merge into pre-existing args helper
-    def _merge(self, args: List[Vertex], names: List, history: Dict):
-        result = args.copy()
-        for name in names:
-            if name in history:
-                result += history[name]
-        return result
-
     def merge(self, *args):
+        print("inside")
+        idx = len(self._pipelines) - 1
+        # store the names in the dict
+        self._merges[idx] = list(args)
         return self
