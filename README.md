@@ -1,6 +1,41 @@
 # GraphX
 GraphX is a Python-based in-memory graph storage engine designed to facilitate the representation of complex relational queries, enabling users to store data while effectively capturing relationships between individual data points.
 
+## Installation
+Install Using Pip
+```
+pip install linnngraphx
+```
+## Example Usage
+```
+from graphx import GraphX
+
+nodes = [1, 2, 3, 4, 5, 6]
+
+edges = [
+    {"from": 1, "to": 2, "forward": "son"},
+    {"from": 2, "to": 3, "forward": "son"},
+    {"from": 2, "to": 4, "forward": "son"},
+    {"from": 2, "to": 5, "forward": "son"},
+    {"from": 2, "to": 6, "forward": "daughter"},
+    {"from": 3, "to": 4, "forward": "brother", "backward": "brother"},
+    {"from": 4, "to": 5, "forward": "brother", "backward": "brother"},
+    {"from": 5, "to": 3, "forward": "brother", "backward": "brother"},
+    {"from": 3, "to": 6, "forward": "sister", "backward": "brother"},
+    {"from": 4, "to": 6, "forward": "sister", "backward": "brother"},
+    {"from": 5, "to": 6, "forward": "sister", "backward": "brother"},
+]
+
+graphX = GraphX(nodes, edges)
+
+results = graphX.query().node(1).forward().forward().run()
+print(results)  ## will get [3, 4, 5, 6]
+
+results = graphX.query().node(1).forward().forward().forward().unique().filter(3).run()
+print(results)  ## should be 3
+
+```
+
 ## Usage
 - Create GraphX
 ```

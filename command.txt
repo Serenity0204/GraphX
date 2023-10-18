@@ -11,7 +11,9 @@ pip:
 unittest:
     python -m unittest tests
 
-
+twine:
+    python setup.py sdist bdist_wheel
+    twine upload dist/*
 
 
 

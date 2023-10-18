@@ -35,6 +35,7 @@ class Query:
         self._args.clear()
         self._tags.clear()
         self._merges.clear()
+        self._pipelines.clear()
 
     def _query(self, name, *args) -> None:
         if len(self._initial) == 0:

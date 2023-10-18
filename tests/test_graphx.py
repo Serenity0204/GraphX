@@ -185,7 +185,7 @@ class GraphXTest(unittest.TestCase):
         # 4: 3 5 6
         # 5: 4 3 6
         # 6: 3 4 5
-        ## should be 4 5 6 3 5 6 4 3 6 3 4 5 -> 4 5 6 3 -> 3, 4, 5, 6,
+        ## should be 4 5 6 3 5 6 4 3 6 3 4 5 -> 4 5 6 3 -> 3
         nodes = (
             self.graphX.query()
             .node(1)
